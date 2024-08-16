@@ -1,0 +1,46 @@
+command /oldkb:
+    trigger:
+        set player's leggings to netherite leggings of protection 4, unbreaking 3, mending named "&7oldkb pants"
+        set {nerfEndCrystalDamage::%player%} to true
+        set {oldkbEnabled::%player%} to true
+        send "&aOld KB Enabled!"
+
+on damage of player:
+    if {nerfEndCrystalDamage::%victim%} is true:
+        attacker = ender crystal:
+            set damage to damage * 0.68
+
+command /oldkboff:
+    trigger:
+        set player's leggings to netherite leggings of blast protection 4, unbreaking 3, mending
+        set {nerfEndCrystalDamage::%player%} to false
+        set {oldkbEnabled::%player%} to false
+        send "&aOld KB disabled!"
+
+on death:
+    if {nerfEndCrystalDamage::%victim%} is true:
+        set {nerfEndCrystalDamage::%victim%} to false
+
+on respawn:
+    if {oldkbEnabled::%player%} is true:
+        execute player command "/oldkb"
+
+on respawn:
+    if {oldkbEnabled::%player%} is false:
+        execute player command "/oldkboff"
+
+command /k1:
+    trigger:
+        make player execute command "/kit1"
+        if {oldkbEnabled::%player%} is true:
+            execute player command "/oldkb"
+        if {oldkbEnabled::%player%} is false:
+            execute player command "/oldkboff"
+
+command /k2:
+    trigger:
+        make player execute command "/kit1"
+        if {oldkbEnabled::%player%} is true:
+            execute player command "/oldkb"
+        if {oldkbEnabled::%player%} is false:
+            execute player command "/oldkboff"

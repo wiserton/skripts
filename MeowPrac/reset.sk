@@ -1,0 +1,12 @@
+# Automatically execute arena reset commands every 5 minutes and announce it
+every 5 minutes:
+    broadcast "&cFFA RESETTING"
+    execute console command "/arena reset grass extreme -silent"
+    execute console command "/arena reset sand extreme -silent"
+
+# Command to instantly reset arenas
+command /reset:
+    trigger:
+        broadcast "&cFFA RESETTING"
+        execute console command "/arena reset grass extreme -silent"
+        execute console command "/arena reset sand extreme -silent"

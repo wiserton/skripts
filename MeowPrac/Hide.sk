@@ -1,0 +1,10 @@
+command /hide:
+    trigger:
+        # Function to generate a random string of length 3 using letters "a", "b", "c"
+        set {_randomString} to random element of "a", "b", "c"
+        set {_randomString} to {_randomString} and random element of "a", "b", "c"
+        set {_randomString} to {_randomString} and random element of "a", "b", "c"
+        
+        # Set player's display name to the random string
+        set player's display name to "&7<%{_randomString}%>"
+        send "&aYour nametag has been changed to <&7%{_randomString}%>."

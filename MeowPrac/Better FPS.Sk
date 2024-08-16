@@ -1,0 +1,92 @@
+# Advanced FPS Optimization Skript with Toggle
+# Place this in the plugins/Skript/scripts folder and reload the Skript plugin.
+
+options:
+    max-entities: 30  # Maximum number of entities per chunk
+    check-interval: 5 minutes  # Interval for checking and applying optimizations
+
+variables:
+    {fps.optimization.%player%} = false
+
+on load:
+    broadcast "&aAdvanced FPS Optimization Skript Loaded!"
+
+# Toggle command
+command /togglefps:
+    trigger:
+        if {fps.optimization.%player%} is false:
+            set {fps.optimization.%player%} to true
+            send "&aFPS Optimization enabled!"
+        else:
+            set {fps.optimization.%player%} to false
+            send "&cFPS Optimization disabled!"
+
+# Disable weather for players with FPS optimization enabled
+on weather change:
+    loop all players:
+        if {fps.optimization.%loop-player%} is true:
+            cancel event
+            send "&7Weather change canceled to improve FPS for %loop-player%."
+
+# Reduce entity render distance for players with FPS optimization enabled
+every {@check-interval}:
+    loop all players:
+        if {fps.optimization.%loop-player%} is true:
+            execute console command "effect give %loop-player% night_vision 300 1 true"
+            execute console command "effect give %loop-player% invisibility 300 1 true"
+
+# Limit entities in chunks for players with FPS optimization enabled
+every 1 minute:
+    loop all chunks:
+        set {_optimizeChunk} to false
+        loop all players in loop-chunk:
+            if {fps.optimization.%loop-player%} is true:
+                set {_optimizeChunk} to true
+                stop loop
+        if {_optimizeChunk} is true:
+            set {_entities::*} to all entities in loop-chunk
+            if size of {_entities::*} > {@max-entities}:
+                loop {_entities::*}:
+                    if loop-entity is not player:
+                        kill loop-entity
+                broadcast "&cExcess entities removed to optimize FPS in chunk with optimized players."
+
+# Reduce particles for players with FPS optimization enabled
+every {@check-interval}:
+    loop all players:
+        if {fps.optimization.%loop-player%} is true:
+            execute console command "particle minecraft:barrier ~ ~ ~ 1 1 1 0 100 force"
+            send "&eParticle reduction executed to improve FPS for %loop-player%."
+
+# Disable fire spread for players with FPS optimization enabled
+every {@check-interval}:
+    loop all players:
+        if {fps.optimization.%loop-player%} is true:
+            execute console command "gamerule doFireTick false"
+            send "&7Fire spread disabled to improve FPS for %loop-player%."
+
+# Disable mob spawning for players with FPS optimization enabled
+every {@check-interval}:
+    loop all players:
+        if {fps.optimization.%loop-player%} is true:
+            execute console command "gamerule doMobSpawning false"
+            send "&7Mob spawning disabled to improve FPS for %loop-player%."
+
+# Periodic cleanup of dropped items for players with FPS optimization enabled
+every {@check-interval}:
+    loop all players:
+        if {fps.optimization.%loop-player%} is true:
+            execute console command "kill @e[type=item]"
+            send "&7Dropped items cleared to improve FPS for %loop-player%."
+
+command /fpsinfo:
+    trigger:
+        send "&aFPS Optimization Skript is active. Performance improvements applied for players who enabled it:"
+        send "&7- Weather changes disabled"
+        send "&7- Reduced entity render distance"
+        send "&7- Limited entities per chunk"
+        send "&7- Periodic particle reduction"
+        send "&7- Fire spread disabled"
+        send "&7- Mob spawning disabled"
+        send "&7- Periodic cleanup of dropped items"
+        send "&7Use &b/togglefps &7to toggle FPS optimization on or off."

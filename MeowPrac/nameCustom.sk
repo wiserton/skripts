@@ -1,0 +1,57 @@
+# Nickname Skript with TAB plugin integration
+
+command /nick <text>:
+    description: Change your nickname
+    permission: nick.use
+    usage: /nick <new nickname>
+    trigger:
+        if arg-1 is not set:
+            send "&cYou must provide a nickname. Usage: /nick <new nickname>"
+            stop
+        if length of arg-1 is greater than 16:
+            send "&cYour nickname must be 16 characters or less."
+            stop
+        set {_oldname} to player's name
+        set {nick::%player%} to arg-1
+        execute console command "tab player %player% nickname %arg-1%"
+        execute console command "tab player %player% nametag %arg-1%"
+        send "&aYour nickname has been changed to &e%arg-1%&a."
+        broadcast "&e%{_oldname}% &ahas changed their nickname to &e%arg-1%&a."
+
+command /unnick:
+    description: Reset your nickname
+    permission: nick.use
+    usage: /unnick
+    trigger:
+        set {_oldname} to {nick::%player%}
+        delete {nick::%player%}
+        execute console command "tab player %player% nickname reset"
+        execute console command "tab player %player% nametag reset"
+        send "&aYour nickname has been reset."
+        broadcast "&e%{_oldname}% &ahas reset their nickname."
+
+on chat:
+    if {nick::%player%} is set:
+        cancel event
+        broadcast "%{nick::%player%}%: %message%"
+    else:
+        set {_displayname} to player's display name
+        cancel event
+        broadcast "%{_displayname}%: %message%"
+
+on join:
+    if {nick::%player%} is set:
+        execute console command "tab player %player% nickname %{nick::%player%}%"
+        execute console command "tab player %player% nametag %{nick::%player%}%"
+    else:
+        execute console command "tab player %player% nickname reset"
+        execute console command "tab player %player% nametag reset"
+
+on death of player:
+    if {nick::%victim%} is set:
+        set {_nickedDeathMessage} to "%{nick::%victim%}% has died."
+        wait 1 tick
+        send "%{_nickedDeathMessage}%" to all players
+        execute console command "tab player %victim% nickname reset"
+        execute console command "tab player %victim% nametag reset"
+        delete {nick::%victim%}

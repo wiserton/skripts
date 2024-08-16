@@ -1,0 +1,17 @@
+command /zombieoldkb:
+    trigger:
+        spawn a zombie at the player
+        set {_zombie} to last spawned entity
+        
+        # Equip the zombie with netherite armor
+        set helmet of {_zombie} to netherite helmet of protection 4, unbreaking 3
+        set chestplate of {_zombie} to netherite chestplate of protection 4, unbreaking 3
+        set leggings of {_zombie} to netherite leggings of protection 4, unbreaking 3
+        set boots of {_zombie} to netherite boots of protection 4, unbreaking 3
+        
+        # Make the zombie hold 64 totems of undying in its hand
+        set {_totems} to 64 of totem of undying
+        set tool of {_zombie} to {_totems}
+        
+        # Nerf explosion damage by 0.68 for this zombie
+        apply resistance 0.68 to {_zombie} for 9999 days
