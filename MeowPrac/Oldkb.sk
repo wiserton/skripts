@@ -39,7 +39,7 @@ command /k1:
 
 command /k2:
     trigger:
-        make player execute command "/kit1"
+        make player execute command "/kit2"
         if {oldkbEnabled::%player%} is true:
             execute player command "/oldkb"
         if {oldkbEnabled::%player%} is false:
