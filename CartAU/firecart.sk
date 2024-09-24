@@ -1,0 +1,7 @@
+on projectile hit:
+    if projectile is an arrow:
+        set {_hit} to entity hit
+        if {_hit} is a minecart:
+            if {_hit} is a tnt minecart:
+                explode {_hit}  # Make the TNT minecart explode
+                cancel event  # Prevent any other actions

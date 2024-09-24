@@ -1,0 +1,23 @@
+# Command to save the player's inventory
+command /savekit:
+    permission: kit.save
+    permission message: "&cYou do not have permission to save kits."
+    trigger:
+        clear {inventory.%player%::*}  # Clear any existing saved items
+        loop player's inventory:
+            if loop-value is not air:  # Check for non-air items
+                add loop-value to {inventory.%player%::*}  # Save items in a list
+        send "&aYour inventory has been saved!"
+
+# Command to load the saved inventory
+command /kit1:
+    permission: kit.load
+    permission message: "&cYou do not have permission to load kits."
+    trigger:
+        if {inventory.%player%::*} is not set:
+            send "&cYou have not saved an inventory yet!"
+            stop
+        clear player's inventory  # Clear the current inventory
+        loop {inventory.%player%::*}:  # Loop through the saved items
+            give loop-value to player  # Give each item to the player
+        send "&aYour inventory has been loaded!"

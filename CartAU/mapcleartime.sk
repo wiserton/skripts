@@ -1,0 +1,24 @@
+options:
+    error: &4&lERROR &8| &7
+    prefix: &7[&e&lCARTAU&7] &7|
+    clear-interval: 20 minutes  # Change this to adjust the clear frequency
+
+# Initialize the timer variable at the start
+on load:
+    set {server::mapclear::nextclear} to {@clear-interval}
+
+# Timer setup to clear every 30 minutes
+every 1 minute:
+    if {server::mapclear::nextclear} > 0:
+        remove 1 minute from {server::mapclear::nextclear}
+    
+    if {server::mapclear::nextclear} <= 0:
+        execute console command "/mapclear forceclear"
+        set {server::mapclear::nextclear} to {@clear-interval}  # Reset the timer
+
+# Update scoreboard variable every minute
+every 1 minute:
+    if {server::mapclear::nextclear} > 0:
+        set {server::mapclear::timeleft} to {server::mapclear::nextclear}
+    else:
+        set {server::mapclear::timeleft} to 0  # Indicates that it's time to clear

@@ -1,0 +1,12 @@
+command /rename <text>:
+    permission: item.rename
+    permission message: "&cYou do not have permission to rename items."
+    usage: "&cUsage: /rename <new name>"
+    trigger:
+        if player's tool is air:
+            send "&cYou must be holding an item to rename it."
+            stop
+        # Apply color codes correctly
+        set {_name} to arg-1
+        set name of player's tool to {_name}.replace("&", "§")  # Replace & with § for color codes
+        send "&aSuccessfully renamed your item to &e%{_name}%&a!"
